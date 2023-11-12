@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "890828892993",
+    "firebase_url": "https://cobacaps-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "cobacaps",
+    "storage_bucket": "cobacaps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890828892993:android:34bc45bfc8e1de29494fc0",
+        "android_client_info": {
+          "package_name": "com.example.ews_capstone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890828892993-lecblnrsf9gppk20anm5smrkjjqc9ae5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ2f3vNf6EBBNAlpeSgdDQFQrUrNXaX1k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890828892993-lecblnrsf9gppk20anm5smrkjjqc9ae5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
