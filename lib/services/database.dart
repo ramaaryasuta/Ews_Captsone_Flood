@@ -39,11 +39,11 @@ class DatabaseService {
       }
       return allData;
     } catch (e) {
-      print('Error fetching data: $e');
+      return e;
     }
   }
 
-  // Fetch account for admin
+  /// Fetch account for admin
   Future admindata() async {
     CollectionReference<Map<String, dynamic>> collection =
         FirebaseFirestore.instance.collection('Accounts');
@@ -63,9 +63,6 @@ class DatabaseService {
   }
 
   void getDocumentId() async {
-    // Assuming you've initialized FirebaseApp and FirebaseFirestore in your app
-
-    // Reference to the collection
     CollectionReference collectionReference = FirebaseFirestore.instance
         .collection('EarlyWarningSystems/monitors/monitor01');
 

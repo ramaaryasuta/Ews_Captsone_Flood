@@ -129,8 +129,16 @@ class _MainContentState extends State<MainContent> {
         Expanded(
           flex: 2,
           child: Container(
-            padding: const EdgeInsets.all(20),
-            child: SvgPicture.asset('assets/svg/cloudy.svg'),
+            padding: const EdgeInsets.only(right: 20),
+            child: (rtHumidity > 60)
+                ? SvgPicture.asset(
+                    'assets/svg/rainy.svg',
+                    width: 150,
+                  ) // soon rain svg
+                : SvgPicture.asset(
+                    'assets/svg/cloudy.svg',
+                    width: 150,
+                  ),
           ),
         )
       ],

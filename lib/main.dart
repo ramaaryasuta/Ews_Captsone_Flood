@@ -1,7 +1,7 @@
+import 'package:ews_capstone/screens/loginpage.dart';
 import 'package:flutter/material.dart';
 
 // screens import for routes
-import 'package:ews_capstone/screens/login.dart';
 import 'screens/admin.dart';
 import 'screens/detail.dart';
 import 'screens/homepage.dart';
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomePage(),
         '/detail': (context) => const DetailPage(),
-        '/login': (context) => const LoginPage(),
+        '/login': (context) => LoginPage(),
         '/admin': (context) => const AdminPage(),
       },
     );

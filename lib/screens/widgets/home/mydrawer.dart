@@ -13,21 +13,47 @@ class MyDrawer extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            Container(
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey)),
-              ),
-              child: ListTile(
-                onTap: () {},
-                leading: const Icon(LineIcons.user),
-                title: const Text('Administrator'),
-                trailing: const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 18,
-                ),
-              ),
+            DrawerTile(
+              icon: LineIcons.user,
+              title: 'Administrator',
+              onTap: () {
+                Navigator.pushNamed(context, '/login');
+              },
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class DrawerTile extends StatelessWidget {
+  const DrawerTile({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final Function onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey)),
+      ),
+      child: ListTile(
+        onTap: () {
+          onTap();
+        },
+        leading: Icon(icon),
+        title: Text(title),
+        trailing: const Icon(
+          Icons.arrow_forward_ios_rounded,
+          size: 18,
         ),
       ),
     );
