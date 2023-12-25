@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
   void login(String username, String password) {
     if (username == dbServ.account[0].username &&
         password == dbServ.account[0].password) {
-      print('Succes Login');
+      Navigator.pushReplacementNamed(context, '/admin');
     } else {
       print('Failed Login');
     }

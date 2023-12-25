@@ -1,6 +1,10 @@
-import 'package:ews_capstone/screens/login.dart';
-import 'package:ews_capstone/screens/home.dart';
 import 'package:flutter/material.dart';
+
+// screens import for routes
+import 'package:ews_capstone/screens/login.dart';
+import 'screens/admin.dart';
+import 'screens/detail.dart';
+import 'screens/homepage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,13 +17,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xff212031),
+        fontFamily: 'Poppins',
+        colorScheme: const ColorScheme.dark(),
+      ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        // Create routes for another Page
-        '/': (context) => const HomeScreen(),
-        '/admin': (context) => const LoginPage(),
+        '/': (context) => const HomePage(),
+        '/detail': (context) => const DetailPage(),
+        '/login': (context) => const LoginPage(),
+        '/admin': (context) => const AdminPage(),
       },
     );
   }

@@ -37,7 +37,6 @@ class DatabaseService {
           waterLevel: response[i].waterLevel,
         ));
       }
-      print('data : ' + allData.length.toString());
       return allData;
     } catch (e) {
       print('Error fetching data: $e');
