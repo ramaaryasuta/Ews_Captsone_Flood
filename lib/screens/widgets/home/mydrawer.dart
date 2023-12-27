@@ -20,6 +20,13 @@ class MyDrawer extends StatelessWidget {
                 Navigator.pushNamed(context, '/login');
               },
             ),
+            DrawerTile(
+              icon: LineIcons.bookOpen,
+              title: 'Pelajari Mitigasi',
+              onTap: () {
+                Navigator.pushNamed(context, '/mitigasi');
+              },
+            ),
           ],
         ),
       ),

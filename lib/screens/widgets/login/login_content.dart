@@ -58,7 +58,7 @@ class LoginContent extends StatelessWidget {
             height: 60,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
-              onPressed: () => login(userCtrl.text, passCtrl.text),
+              onPressed: () => login(userCtrl.text, passCtrl.text, context),
               child: const Text('Masuk'),
             ),
           )
@@ -67,19 +67,28 @@ class LoginContent extends StatelessWidget {
     );
   }
 
-  void login(String username, String password) {
+  void login(String username, String password, BuildContext context) {
+    const failedSnackBar = SnackBar(
+      backgroundColor: Colors.redAccent,
+      content: Text(
+        'Username atau password salah',
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+
     /// encrypt password using caesar cipher
     password = caesarCipher(password);
     if (listAdmin
         .where((element) =>
             element.username == username && element.password == password)
         .isNotEmpty) {
-      print('Berhasil');
+      Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
     } else {
-      print('gagal');
+      ScaffoldMessenger.of(context).showSnackBar(failedSnackBar);
     }
   }
 
+  /// Encrypt for password
   String caesarCipher(String text) {
     String result = '';
 

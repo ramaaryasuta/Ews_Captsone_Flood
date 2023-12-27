@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,8 @@ class _AdminPageState extends State<AdminPage> {
   bool actvDHT = false;
   bool actvJSN = false;
 
+  bool isActive = false;
+
   TextEditingController bannerTextCtrl = TextEditingController();
 
   @override
@@ -25,12 +29,12 @@ class _AdminPageState extends State<AdminPage> {
         child: Column(
           children: [
             headerAdmin(context),
-            sensorTile(),
-            const Divider(),
-            if (openSensorMenu) sensorMenu() else const SizedBox(),
             notifTile(),
             const Divider(),
             if (openNotifMenu) bannerTxtField() else const SizedBox(),
+            sensorTile(),
+            const Divider(),
+            if (openSensorMenu) sensorMenu() else const SizedBox(),
           ],
         ),
       ),
@@ -38,32 +42,29 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   Container bannerTxtField() {
-    DatabaseReference rtRef =
-        FirebaseDatabase.instance.ref().child('monitor01/admin/');
+    final DatabaseReference rtRef =
+        FirebaseDatabase.instance.ref().child('monitor01/admin/isActive');
+    rtRef.onValue.listen((event) {
+      setState(() {
+        isActive = event.snapshot.value as bool;
+      });
+    });
     return Container(
-      color: Colors.black87,
+      color: const Color(0xff29273C),
       padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          TextField(
-            controller: bannerTextCtrl,
-            maxLines: null,
-            keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[800],
-              hintText: 'Enter your text',
-              border: const OutlineInputBorder(),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green[400]),
-            onPressed: () {
-              rtRef.update({'notif': bannerTextCtrl.text.toString()});
-            },
-            child: const Text('Update Banner'),
-          )
-        ],
+      child: ListTile(
+        leading: const Icon(Icons.miscellaneous_services_rounded),
+        title: const Text('Mode Aktif'),
+        trailing: Switch(
+          value: isActive,
+          onChanged: (value) {
+            if (value) {
+              rtRef.set(true);
+            } else {
+              rtRef.set(false);
+            }
+          },
+        ),
       ),
     );
   }
@@ -99,25 +100,34 @@ class _AdminPageState extends State<AdminPage> {
   Container sensorMenu() {
     DatabaseReference rtRef =
         FirebaseDatabase.instance.ref().child('monitor01/admin/');
+    rtRef.onValue.listen((event) {
+      var data = jsonEncode(event.snapshot.value);
+      Map<String, dynamic> mapRt = jsonDecode(data);
+      setState(() {
+        actvDHT = mapRt['dht'];
+        actvJSN = mapRt['jsn'];
+      });
+    });
     return Container(
-      color: Colors.black87,
+      color: const Color(0xff29273C),
       child: Column(
         children: [
           ListTile(
             title: const Text('DHT 22 '),
             subtitle: Text('Aktif : $actvDHT'),
             trailing: Switch(
-                value: actvDHT,
-                onChanged: (value) {
-                  if (value) {
-                    rtRef.update({'dht': 'Aktif'});
-                  } else {
-                    rtRef.update({'dht': 'Perbaikan'});
-                  }
-                  setState(() {
-                    actvDHT = value;
-                  });
-                }),
+              value: actvDHT,
+              onChanged: (value) {
+                if (value) {
+                  rtRef.update({'dht': value});
+                } else {
+                  rtRef.update({'dht': value});
+                }
+                setState(() {
+                  actvDHT = value;
+                });
+              },
+            ),
           ),
           ListTile(
             title: const Text('JSN - Ultra Sonic'),
@@ -126,9 +136,9 @@ class _AdminPageState extends State<AdminPage> {
                 value: actvJSN,
                 onChanged: (value) {
                   if (value) {
-                    rtRef.update({'jsn': 'Aktif'});
+                    rtRef.update({'jsn': value});
                   } else {
-                    rtRef.update({'jsn': 'Perbaikan'});
+                    rtRef.update({'jsn': value});
                   }
                   setState(() {
                     actvJSN = value;
@@ -142,23 +152,40 @@ class _AdminPageState extends State<AdminPage> {
 
   Container headerAdmin(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const CircleAvatar(
-            backgroundImage: NetworkImage(
-                'https://cdn-icons-png.flaticon.com/512/149/149071.png'),
-            radius: 30,
-          ),
           const Text(
-            'Hello Admin',
+            'Halaman Admin',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/', (Route route) => false);
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Logout'),
+                    content: const Text('Apakah anda yakin ingin keluar?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/', (Route route) => false);
+                        },
+                        child: const Text('Ya'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Tidak'),
+                      )
+                    ],
+                  );
+                },
+              );
             },
             icon: const Icon(Icons.logout_outlined),
           )

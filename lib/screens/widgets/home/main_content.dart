@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:ews_capstone/screens/widgets/mitigasi/mitigasi_data.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'chart_content.dart';
 import 'listview_detail.dart';
+import '../mitigasi/list_mitigasi_builder.dart';
 
 class MainContent extends StatefulWidget {
   const MainContent({
@@ -50,7 +53,46 @@ class _MainContentState extends State<MainContent> {
                 ),
                 const Spacer(),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Dialog(
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(),
+                                    const Text(
+                                      'Kondisi Aman',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(Icons.close),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Expanded(
+                                  child: ListMitigasi(
+                                    langkah: langkahAman,
+                                    colors: Colors.green,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                   child: const Text('Mitigasi'),
                 )
               ],
@@ -60,7 +102,8 @@ class _MainContentState extends State<MainContent> {
             suhu: rtTemperature,
             humidity: rtHumidity,
             waterLevel: rtWaterLevel,
-          )
+          ),
+          ChartSec()
         ],
       ),
     );

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'screens/admin.dart';
 import 'screens/detail.dart';
 import 'screens/homepage.dart';
+import 'screens/mitigasi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         '/detail': (context) => const DetailPage(),
         '/login': (context) => LoginPage(),
         '/admin': (context) => const AdminPage(),
+        '/mitigasi': (context) => const MitigasiPage(),
       },
     );
   }

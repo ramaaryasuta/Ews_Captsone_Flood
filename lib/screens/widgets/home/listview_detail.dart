@@ -27,77 +27,65 @@ class ListDetail extends StatelessWidget {
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: InkWell(
-              onTap: () {},
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      const Icon(
-                        LineIcons.water,
-                        size: 40,
-                      ),
-                      const SizedBox(width: 15),
-                      const Text('Ketinggian AIr'),
-                      const Spacer(),
-                      Text('$waterLevel cm'),
-                      const SizedBox(width: 5),
-                      const Icon(Icons.arrow_forward_ios_rounded)
-                    ],
-                  ),
-                  const Divider(color: Colors.grey)
-                ],
-              ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      LineIcons.water,
+                      size: 40,
+                    ),
+                    const SizedBox(width: 15),
+                    const Text('Ketinggian AIr'),
+                    const Spacer(),
+                    Text('$waterLevel cm'),
+                    const SizedBox(width: 5),
+                  ],
+                ),
+                const Divider(color: Colors.grey)
+              ],
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: InkWell(
-              onTap: () {},
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      const Icon(
-                        LineIcons.thermometerEmpty,
-                        size: 40,
-                      ),
-                      const SizedBox(width: 15),
-                      const Text('Suhu Sekitar'),
-                      const Spacer(),
-                      Text('$suhu°C'),
-                      const SizedBox(width: 5),
-                      const Icon(Icons.arrow_forward_ios_rounded)
-                    ],
-                  ),
-                  const Divider(color: Colors.grey)
-                ],
-              ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      LineIcons.thermometerEmpty,
+                      size: 40,
+                    ),
+                    const SizedBox(width: 15),
+                    const Text('Suhu Sekitar'),
+                    const Spacer(),
+                    Text('$suhu°C'),
+                    const SizedBox(width: 5),
+                  ],
+                ),
+                const Divider(color: Colors.grey)
+              ],
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: InkWell(
-              onTap: () {},
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      const Icon(
-                        LineIcons.cloudWithSunAndRain,
-                        size: 40,
-                      ),
-                      const SizedBox(width: 15),
-                      const Text('Kelembaban'),
-                      const Spacer(),
-                      Text('$humidity%'),
-                      const SizedBox(width: 5),
-                      const Icon(Icons.arrow_forward_ios_rounded)
-                    ],
-                  ),
-                  const Divider(color: Colors.grey)
-                ],
-              ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      LineIcons.cloudWithSunAndRain,
+                      size: 40,
+                    ),
+                    const SizedBox(width: 15),
+                    const Text('Kelembaban'),
+                    const Spacer(),
+                    Text('$humidity%'),
+                    const SizedBox(width: 5),
+                  ],
+                ),
+                const Divider(color: Colors.grey)
+              ],
             ),
           ),
         ],
