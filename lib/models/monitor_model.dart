@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MonitorModel {
   String timestamp;
-  int humidity;
-  int temprature;
+  double humidity;
+  double temprature;
   int waterLevel;
 
   MonitorModel({
@@ -13,7 +13,7 @@ class MonitorModel {
     required this.waterLevel,
   });
 
-  // map data from db to model
+  /// map data from db to model
   factory MonitorModel.fromSnapshoot(
       QueryDocumentSnapshot<Map<String, dynamic>> document) {
     return MonitorModel(

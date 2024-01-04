@@ -59,6 +59,9 @@ class LoginContent extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
               onPressed: () => login(userCtrl.text, passCtrl.text, context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff34334A),
+              ),
               child: const Text('Masuk'),
             ),
           )

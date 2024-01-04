@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ListMitigasi extends StatelessWidget {
-  ListMitigasi({
+  const ListMitigasi({
     super.key,
     required this.langkah,
     required this.colors,

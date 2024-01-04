@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ews_capstone/screens/widgets/mitigasi/mitigasi_data.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -21,8 +22,8 @@ class MainContent extends StatefulWidget {
 class _MainContentState extends State<MainContent> {
   /// default value
   int rtWaterLevel = 0;
-  int rtHumidity = 0;
-  int rtTemperature = 0;
+  double rtHumidity = 0;
+  double rtTemperature = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +47,20 @@ class _MainContentState extends State<MainContent> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   decoration: BoxDecoration(
-                    color: Colors.green,
+                    color: (rtWaterLevel > 47)
+                        ? Colors.red
+                        : (rtWaterLevel > 24)
+                            ? Colors.orange
+                            : Colors.green,
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: const Text('Aman'),
+                  child: Text(
+                    (rtWaterLevel > 47)
+                        ? 'Berbahaya'
+                        : (rtWaterLevel > 24)
+                            ? 'Siaga'
+                            : 'Aman',
+                  ),
                 ),
                 const Spacer(),
                 ElevatedButton(
@@ -67,9 +78,13 @@ class _MainContentState extends State<MainContent> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const SizedBox(),
-                                    const Text(
-                                      'Kondisi Aman',
-                                      style: TextStyle(fontSize: 20),
+                                    Text(
+                                      (rtWaterLevel > 47)
+                                          ? 'Berbahaya'
+                                          : (rtWaterLevel > 24)
+                                              ? 'Siaga'
+                                              : 'Aman',
+                                      style: const TextStyle(fontSize: 20),
                                     ),
                                     IconButton(
                                       onPressed: () {
@@ -82,8 +97,16 @@ class _MainContentState extends State<MainContent> {
                                 const SizedBox(height: 10),
                                 Expanded(
                                   child: ListMitigasi(
-                                    langkah: langkahAman,
-                                    colors: Colors.green,
+                                    langkah: (rtWaterLevel > 47)
+                                        ? langkahDarurat
+                                        : (rtWaterLevel > 24)
+                                            ? langkahSiaga
+                                            : langkahAman,
+                                    colors: (rtWaterLevel > 47)
+                                        ? Colors.red
+                                        : (rtWaterLevel > 24)
+                                            ? Colors.orange
+                                            : Colors.green,
                                   ),
                                 )
                               ],
@@ -103,7 +126,7 @@ class _MainContentState extends State<MainContent> {
             humidity: rtHumidity,
             waterLevel: rtWaterLevel,
           ),
-          ChartSec()
+          const ChartSec()
         ],
       ),
     );
@@ -124,6 +147,11 @@ class _MainContentState extends State<MainContent> {
         });
       },
     );
+
+    // if (rtWaterLevel > 24) {
+    //   NotificationFunc('Siaga', 'Ketinggian air sudah diatas 24 cm');
+    // }
+
     return Row(
       children: [
         Expanded(
@@ -165,6 +193,10 @@ class _MainContentState extends State<MainContent> {
                   'Kelembaban disekitar $rtHumidity%',
                   style: const TextStyle(color: Colors.grey),
                 ),
+                Text(
+                  (rtHumidity > 60) ? 'Kemungkinan Hujan' : 'Kemungkinan Cerah',
+                  style: const TextStyle(color: Colors.grey),
+                ),
               ],
             ),
           ),
@@ -185,6 +217,17 @@ class _MainContentState extends State<MainContent> {
           ),
         )
       ],
+    );
+  }
+
+  notificationFunc(String title, String body) {
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 10,
+        channelKey: 'basic_channel',
+        title: title,
+        body: body,
+      ),
     );
   }
 }

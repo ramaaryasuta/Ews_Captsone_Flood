@@ -30,10 +30,20 @@ class _ChartSecState extends State<ChartSec> {
     return FutureBuilder(
       future: dbServ.fetchData(),
       builder: (context, snapshot) {
+        print(snapshot.data);
         if (snapshot.hasData) {
           return Column(
             children: [
-              const Text('Grafik pemantauan tinggi air'),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    Icon(Icons.ssid_chart_rounded),
+                    SizedBox(width: 10),
+                    Text('Grafik pemantauan tinggi air'),
+                  ],
+                ),
+              ),
               AspectRatio(
                 aspectRatio: 1.5,
                 child: Padding(
@@ -55,61 +65,61 @@ class _ChartSecState extends State<ChartSec> {
     );
   }
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 10,
-    );
+  // Widget bottomTitleWidgets(double value, TitleMeta meta) {
+  //   const style = TextStyle(
+  //     fontWeight: FontWeight.bold,
+  //     fontSize: 10,
+  //   );
 
-    String timeStamp(int index) {
-      String dateTimeString = dbServ.allData[index].timestamp;
+  //   String timeStamp(int index) {
+  //     String dateTimeString = dbServ.allData[index].timestamp;
 
-      List<String> parts = dateTimeString.split(' ');
+  //     List<String> parts = dateTimeString.split(' ');
 
-      String timePart = parts[0];
+  //     String timePart = parts[0];
 
-      List<String> timeParts = timePart.split(':');
+  //     List<String> timeParts = timePart.split(':');
 
-      String timeWithoutSeconds = "${timeParts[0]}:${timeParts[1]}";
+  //     String timeWithoutSeconds = "${timeParts[0]}:${timeParts[1]}";
 
-      return timeWithoutSeconds;
-    }
+  //     return timeWithoutSeconds;
+  //   }
 
-    final int dbLength = dbServ.allData.length;
+  //   final int dbLength = dbServ.allData.length;
 
-    Widget text;
-    switch (value.toInt()) {
-      case 0:
-        text = Text(timeStamp(dbLength - 19), style: style);
-        break;
-      case 3:
-        text = Text(timeStamp(dbLength - 16), style: style);
-        break;
-      case 6:
-        text = Text(timeStamp(dbLength - 13), style: style);
-        break;
-      case 9:
-        text = Text(timeStamp(dbLength - 10), style: style);
-        break;
-      case 12:
-        text = Text(timeStamp(dbLength - 7), style: style);
-        break;
-      case 15:
-        text = Text(timeStamp(dbLength - 4), style: style);
-        break;
-      case 18:
-        text = Text(timeStamp(dbLength - 1), style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
+  //   Widget text;
+  //   switch (value.toInt()) {
+  //     case 0:
+  //       text = Text(timeStamp(dbLength - 19), style: style);
+  //       break;
+  //     case 3:
+  //       text = Text(timeStamp(dbLength - 16), style: style);
+  //       break;
+  //     case 6:
+  //       text = Text(timeStamp(dbLength - 13), style: style);
+  //       break;
+  //     case 9:
+  //       text = Text(timeStamp(dbLength - 10), style: style);
+  //       break;
+  //     case 12:
+  //       text = Text(timeStamp(dbLength - 7), style: style);
+  //       break;
+  //     case 15:
+  //       text = Text(timeStamp(dbLength - 4), style: style);
+  //       break;
+  //     case 18:
+  //       text = Text(timeStamp(dbLength - 1), style: style);
+  //       break;
+  //     default:
+  //       text = const Text('', style: style);
+  //       break;
+  //   }
 
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: text,
-    );
-  }
+  //   return SideTitleWidget(
+  //     axisSide: meta.axisSide,
+  //     child: text,
+  //   );
+  // }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
@@ -165,14 +175,14 @@ class _ChartSecState extends State<ChartSec> {
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            interval: 1,
-            getTitlesWidget: bottomTitleWidgets,
-          ),
-        ),
+        // bottomTitles: AxisTitles(
+        //   sideTitles: SideTitles(
+        //     showTitles: true,
+        //     reservedSize: 30,
+        //     interval: 1,
+        //     getTitlesWidget: bottomTitleWidgets,
+        //   ),
+        // ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
@@ -184,7 +194,7 @@ class _ChartSecState extends State<ChartSec> {
       ),
       borderData: FlBorderData(
         show: true,
-        border: Border.all(color: const Color(0xff37434d)),
+        border: Border.all(color: Colors.purpleAccent.withOpacity(0.4)),
       ),
       minX: 0,
       maxX: 17,
@@ -212,22 +222,22 @@ class _ChartSecState extends State<ChartSec> {
           ),
         ),
       ],
-      lineTouchData: LineTouchData(
-        touchTooltipData: LineTouchTooltipData(
-          getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-            return touchedBarSpots.map((barSpot) {
-              TextStyle textStyle = const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              );
-              return LineTooltipItem(
-                "${barSpot.y.toInt()} cm\n ${dbServ.allData[(dbServ.allData.length - 18) + barSpot.x.toInt()].timestamp}",
-                textStyle,
-              );
-            }).toList();
-          },
-        ),
-      ),
+      // lineTouchData: LineTouchData(
+      //   touchTooltipData: LineTouchTooltipData(
+      //     getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+      //       return touchedBarSpots.map((barSpot) {
+      //         TextStyle textStyle = const TextStyle(
+      //           color: Colors.white,
+      //           fontWeight: FontWeight.bold,
+      //         );
+      //         return LineTooltipItem(
+      //           "${barSpot.y.toInt()} cm\n ${dbServ.allData[(dbServ.allData.length - 18) + barSpot.x.toInt()].timestamp}",
+      //           textStyle,
+      //         );
+      //       }).toList();
+      //     },
+      //   ),
+      // ),
     );
   }
 
@@ -236,10 +246,10 @@ class _ChartSecState extends State<ChartSec> {
     for (int i = 0; i < 18; i++) {
       // position for X
       double x = i.toDouble();
+      print('cek panjang titik: ${dbServ.allData.length}');
 
       // get data waterLevel
-      double y = dbServ.allData[((dbServ.allData.length - 18) + i)].waterLevel
-          .toDouble();
+      double y = dbServ.allData[i].waterLevel.toDouble();
       spots.add(FlSpot(x, y));
     }
 
