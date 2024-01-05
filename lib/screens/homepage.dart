@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff212031),
-        title: const Text('Semarang Selatan'),
+        title: const Text('Semarang Utara'),
         actions: [
           IconButton(
             onPressed: () {
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
                   id: 10,
                   channelKey: 'basic_channel',
                   title: 'EWS Banjir 29',
-                  body: 'Sample Notification',
+                  body: 'Ngetes Notification pake button',
                 ),
               );
             },

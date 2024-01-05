@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ews_capstone/screens/widgets/mitigasi/mitigasi_data.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -21,9 +20,9 @@ class MainContent extends StatefulWidget {
 
 class _MainContentState extends State<MainContent> {
   /// default value
-  int rtWaterLevel = 0;
-  double rtHumidity = 0;
-  double rtTemperature = 0;
+  num rtWaterLevel = 0;
+  num rtHumidity = 0;
+  num rtTemperature = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +168,9 @@ class _MainContentState extends State<MainContent> {
                   child: Row(
                     children: [
                       Text(
-                        '$rtWaterLevel',
+                        rtWaterLevel.toStringAsFixed(2),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 40,
                           color: Colors.orangeAccent,
@@ -179,6 +180,8 @@ class _MainContentState extends State<MainContent> {
                       const SizedBox(width: 5),
                       const Text(
                         'cm',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -217,17 +220,6 @@ class _MainContentState extends State<MainContent> {
           ),
         )
       ],
-    );
-  }
-
-  notificationFunc(String title, String body) {
-    AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: 10,
-        channelKey: 'basic_channel',
-        title: title,
-        body: body,
-      ),
     );
   }
 }

@@ -13,39 +13,37 @@ class DatabaseService {
   );
 
   // Fetch All data From Firestore Database
-  Future fetchData() async {
-    CollectionReference<Map<String, dynamic>> collection = FirebaseFirestore
-        .instance
-        .collection('EarlyWarningSystems/monitors/monitor01');
+  // Future fetchData() async {
+  //   CollectionReference<Map<String, dynamic>> collection = FirebaseFirestore
+  //       .instance
+  //       .collection('EarlyWarningSystems/monitors/monitor01');
 
-    try {
-      // Fetch data from Firestore
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await collection.get();
-      print('Dapat data');
+  //   try {
+  //     // Fetch data from Firestore
+  //     QuerySnapshot<Map<String, dynamic>> querySnapshot =
+  //         await collection.get();
+  //     print('Dapat data');
 
-      // get data object to list
-      final berhasil = querySnapshot.docs.map((e) {
-        print(e['humidity']);
-        return MonitorModel.fromSnapshoot(e);
-      }).toList();
-      print('Berhasil save');
-      print(berhasil.length);
+  //     // get data object to list
+  //     final response =
+  //         querySnapshot.docs.map((e) => MonitorModel.fromSnapshoot(e)).toList();
+  //     print('Berhasil save');
+  //     print(response.length);
 
-      // testing read data
-      // for (int i = 0; i < response.length; i++) {
-      //   allData.add(MonitorModel(
-      //     timestamp: response[i].timestamp,
-      //     humidity: response[i].humidity,
-      //     temprature: response[i].temprature,
-      //     waterLevel: response[i].waterLevel,
-      //   ));
-      // }
-      return allData;
-    } catch (e) {
-      return e;
-    }
-  }
+  //     /// testing read data
+  //     for (int i = 0; i < response.length; i++) {
+  //       allData.add(MonitorModel(
+  //         timestamp: response[i].timestamp,
+  //         humidity: response[i].humidity,
+  //         temprature: response[i].temprature,
+  //         waterLevel: response[i].waterLevel,
+  //       ));
+  //     }
+  //     return allData;
+  //   } catch (e) {
+  //     return e;
+  //   }
+  // }
 
   /// Fetch account for admin
   Future admindata() async {

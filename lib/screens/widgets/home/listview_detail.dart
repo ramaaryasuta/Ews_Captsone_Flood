@@ -9,9 +9,9 @@ class ListDetail extends StatelessWidget {
     required this.waterLevel,
   });
 
-  final double suhu;
-  final double humidity;
-  final int waterLevel;
+  final num suhu;
+  final num humidity;
+  final num waterLevel;
 
   @override
   Widget build(BuildContext context) {
