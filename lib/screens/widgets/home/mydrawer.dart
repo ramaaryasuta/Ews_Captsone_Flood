@@ -27,6 +27,13 @@ class MyDrawer extends StatelessWidget {
                 Navigator.pushNamed(context, '/mitigasi');
               },
             ),
+            DrawerTile(
+              icon: LineIcons.fire,
+              title: 'Example firestore',
+              onTap: () {
+                Navigator.pushNamed(context, '/detail');
+              },
+            ),
           ],
         ),
       ),

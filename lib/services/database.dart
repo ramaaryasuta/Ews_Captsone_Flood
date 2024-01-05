@@ -13,35 +13,37 @@ class DatabaseService {
   );
 
   // Fetch All data From Firestore Database
-  Future fetchData() async {
-    CollectionReference<Map<String, dynamic>> collection = FirebaseFirestore
-        .instance
-        .collection('EarlyWarningSystems/monitors/monitor01');
+  // Future fetchData() async {
+  //   CollectionReference<Map<String, dynamic>> collection = FirebaseFirestore
+  //       .instance
+  //       .collection('EarlyWarningSystems/monitors/monitor01');
 
-    try {
-      // Fetch data from Firestore
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await collection.get();
+  //   try {
+  //     // Fetch data from Firestore
+  //     QuerySnapshot<Map<String, dynamic>> querySnapshot =
+  //         await collection.get();
+  //     print('Dapat data');
 
-      // get data object to list
-      final response = querySnapshot.docs
-          .map((doc) => MonitorModel.fromSnapshoot(doc))
-          .toList();
+  //     // get data object to list
+  //     final response =
+  //         querySnapshot.docs.map((e) => MonitorModel.fromSnapshoot(e)).toList();
+  //     print('Berhasil save');
+  //     print(response.length);
 
-      // testing read data
-      for (int i = 0; i < response.length; i++) {
-        allData.add(MonitorModel(
-          timestamp: response[i].timestamp,
-          humidity: response[i].humidity,
-          temprature: response[i].temprature,
-          waterLevel: response[i].waterLevel,
-        ));
-      }
-      return allData;
-    } catch (e) {
-      return e;
-    }
-  }
+  //     /// testing read data
+  //     for (int i = 0; i < response.length; i++) {
+  //       allData.add(MonitorModel(
+  //         timestamp: response[i].timestamp,
+  //         humidity: response[i].humidity,
+  //         temprature: response[i].temprature,
+  //         waterLevel: response[i].waterLevel,
+  //       ));
+  //     }
+  //     return allData;
+  //   } catch (e) {
+  //     return e;
+  //   }
+  // }
 
   /// Fetch account for admin
   Future admindata() async {
@@ -60,45 +62,5 @@ class DatabaseService {
       );
     }
     return account;
-  }
-
-  void getDocumentId() async {
-    CollectionReference collectionReference = FirebaseFirestore.instance
-        .collection('EarlyWarningSystems/monitors/monitor01');
-
-    // Query the collection, for example, get the first document
-    QuerySnapshot querySnapshot = await collectionReference.get();
-
-    // Check if there are documents in the query result
-    if (querySnapshot.docs.isNotEmpty) {
-      // Get the document ID of the first document
-      // String documentId = querySnapshot.docs[0].id;
-
-      // print("Document ID: $documentId");
-
-      for (int i = 0; i < 2; i++) {
-        DocumentReference documentReference = FirebaseFirestore.instance
-            .collection('EarlyWarningSystems/monitors/monitor01')
-            .doc(querySnapshot.docs[i].id.toString());
-
-        documentReference.delete().then((value) {
-          print("Document successfully deleted!");
-          print(querySnapshot.docs[i].id.toString());
-        }).catchError((error) => print("Error deleting document: $error"));
-      }
-    } else {
-      print("No documents found in the collection");
-    }
-  }
-
-  // nyoba
-  void deleteDataAuto() async {
-    int currentEpoch = (DateTime.now().millisecondsSinceEpoch / 1000).toInt();
-    int deleteInMonth = 1 * 30 * 24 * 60 * 60;
-    int dateToDelete = currentEpoch - deleteInMonth;
-    List<int> allData = [1, 2, 3, 4, 5, 6, 7];
-
-    List<int> filterData = allData.where((number) => number < 5).toList();
-    print(filterData);
   }
 }

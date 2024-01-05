@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ews_capstone/screens/loginpage.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,16 @@ import 'screens/mitigasi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AwesomeNotifications().initialize(
+      null,
+      [
+        NotificationChannel(
+          channelKey: 'basic_channel',
+          channelName: 'EWS notifications',
+          channelDescription: 'Notifikasi EWS Banjir',
+        )
+      ],
+      debug: true);
   runApp(const MyApp());
 }
 
@@ -27,7 +38,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const HomePage(),
-        '/detail': (context) => const DetailPage(),
+        '/detail': (context) => DetailPage(),
         '/login': (context) => LoginPage(),
         '/admin': (context) => const AdminPage(),
         '/mitigasi': (context) => const MitigasiPage(),

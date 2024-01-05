@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
 import '../services/database.dart';
@@ -15,11 +16,35 @@ class _HomePageState extends State<HomePage> {
   DatabaseService dbServ = DatabaseService();
 
   @override
+  void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllow) => {
+          if (!isAllow)
+            {AwesomeNotifications().requestPermissionToSendNotifications()}
+        });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff212031),
-        title: const Text('Semarang Selatan'),
+        title: const Text('Semarang Utara'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                  id: 10,
+                  channelKey: 'basic_channel',
+                  title: 'EWS Banjir 29',
+                  body: 'Ngetes Notification pake button',
+                ),
+              );
+            },
+            icon: const Icon(Icons.notification_add),
+          )
+        ],
       ),
       drawer: const MyDrawer(),
       body: FutureBuilder(
