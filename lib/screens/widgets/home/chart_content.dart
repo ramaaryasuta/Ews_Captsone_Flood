@@ -85,63 +85,6 @@ class _ChartSecState extends State<ChartSec> {
     );
   }
 
-  Widget bottomTitleWidgets(
-      double value, TitleMeta meta, List<MonitorModel> data) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 10,
-    );
-
-    String timeStamp(int index) {
-      String dateTimeString = data[index].timestamp;
-
-      List<String> parts = dateTimeString.split(' ');
-
-      String timePart = parts[0];
-
-      List<String> timeParts = timePart.split(':');
-
-      String timeWithoutSeconds = "${timeParts[0]}:${timeParts[1]}";
-
-      return timeWithoutSeconds;
-    }
-
-    final int dtLength = data.length;
-
-    Widget text;
-    switch (value.toInt()) {
-      case 0:
-        text = Text(timeStamp(dtLength - 19), style: style);
-        break;
-      case 3:
-        text = Text(timeStamp(dtLength - 16), style: style);
-        break;
-      case 6:
-        text = Text(timeStamp(dtLength - 13), style: style);
-        break;
-      case 9:
-        text = Text(timeStamp(dtLength - 10), style: style);
-        break;
-      case 12:
-        text = Text(timeStamp(dtLength - 7), style: style);
-        break;
-      case 15:
-        text = Text(timeStamp(dtLength - 4), style: style);
-        break;
-      case 18:
-        text = Text(timeStamp(dtLength - 1), style: style);
-        break;
-      default:
-        text = const Text('pis', style: style);
-        break;
-    }
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: text,
-    );
-  }
-
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -196,14 +139,6 @@ class _ChartSecState extends State<ChartSec> {
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        // bottomTitles: AxisTitles(
-        //   sideTitles: SideTitles(
-        //     showTitles: true,
-        //     reservedSize: 30,
-        //     interval: 1,
-        //     getTitlesWidget: bottomTitleWidgets,
-        //   ),
-        // ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
@@ -212,13 +147,18 @@ class _ChartSecState extends State<ChartSec> {
             reservedSize: 42,
           ),
         ),
+        bottomTitles: const AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
       ),
       borderData: FlBorderData(
         show: true,
-        border: Border.all(color: Colors.purpleAccent.withOpacity(0.4)),
+        border: Border.all(color: Colors.blueAccent.withOpacity(0.4)),
       ),
       minX: 0,
-      maxX: 17,
+      maxX: 18,
       minY: 0,
       maxY: 100,
       lineBarsData: [
@@ -243,33 +183,33 @@ class _ChartSecState extends State<ChartSec> {
           ),
         ),
       ],
-      // lineTouchData: LineTouchData(
-      //   touchTooltipData: LineTouchTooltipData(
-      //     getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-      //       return touchedBarSpots.map((barSpot) {
-      //         TextStyle textStyle = const TextStyle(
-      //           color: Colors.white,
-      //           fontWeight: FontWeight.bold,
-      //         );
-      //         return LineTooltipItem(
-      //           "${barSpot.y.toInt()} cm\n ${dbServ.allData[(dbServ.allData.length - 18) + barSpot.x.toInt()].timestamp}",
-      //           textStyle,
-      //         );
-      //       }).toList();
-      //     },
-      //   ),
-      // ),
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+            return touchedBarSpots.map((barSpot) {
+              TextStyle textStyle = const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              );
+              return LineTooltipItem(
+                "${barSpot.y.toInt()} cm\n ${data[(data.length - 19) + barSpot.x.toInt()].timestamp}",
+                textStyle,
+              );
+            }).toList();
+          },
+        ),
+      ),
     );
   }
 
   List<FlSpot> getChartDataPoint(List<MonitorModel> data) {
     List<FlSpot> spots = [];
-    for (int i = 0; i < 18; i++) {
+    for (int i = 0; i < 19; i++) {
       // position for X
       double x = i.toDouble();
 
       // get data waterLevel
-      double y = data[data.length - 18 + i].waterLevel.toDouble();
+      double y = data[data.length - 19 + i].waterLevel.toDouble();
       spots.add(FlSpot(x, y));
     }
 

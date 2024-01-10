@@ -30,21 +30,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: const Color(0xff212031),
         title: const Text('Semarang Utara'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              AwesomeNotifications().createNotification(
-                content: NotificationContent(
-                  id: 10,
-                  channelKey: 'basic_channel',
-                  title: 'EWS Banjir 29',
-                  body: 'Ngetes Notification pake button',
-                ),
-              );
-            },
-            icon: const Icon(Icons.notification_add),
-          )
-        ],
       ),
       drawer: const MyDrawer(),
       body: FutureBuilder(

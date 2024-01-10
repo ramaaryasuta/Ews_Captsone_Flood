@@ -28,10 +28,10 @@ class MyDrawer extends StatelessWidget {
               },
             ),
             DrawerTile(
-              icon: LineIcons.fire,
-              title: 'Example firestore',
+              icon: LineIcons.clock,
+              title: 'Riwayat',
               onTap: () {
-                Navigator.pushNamed(context, '/detail');
+                Navigator.pushNamed(context, '/backlog');
               },
             ),
           ],

@@ -51,19 +51,20 @@ class _AdminPageState extends State<AdminPage> {
     });
     return Container(
       color: const Color(0xff29273C),
-      padding: const EdgeInsets.all(10),
       child: ListTile(
-        leading: const Icon(Icons.miscellaneous_services_rounded),
         title: const Text('Mode Aktif'),
-        trailing: Switch(
-          value: isActive,
-          onChanged: (value) {
-            if (value) {
-              rtRef.set(true);
-            } else {
-              rtRef.set(false);
-            }
-          },
+        trailing: Transform.scale(
+          scale: 0.7,
+          child: Switch(
+            value: isActive,
+            onChanged: (value) {
+              if (value) {
+                rtRef.set(true);
+              } else {
+                rtRef.set(false);
+              }
+            },
+          ),
         ),
       ),
     );
@@ -71,9 +72,9 @@ class _AdminPageState extends State<AdminPage> {
 
   ListTile notifTile() {
     return ListTile(
-      leading: const Icon(Icons.notifications),
-      title: const Text('Banner Notifikasi'),
-      subtitle: const Text('update banner notifikasi'),
+      leading: const Icon(Icons.miscellaneous_services_rounded),
+      title: const Text('Akses ESP32'),
+      subtitle: const Text('Pengaturan esp32'),
       trailing: const Icon(Icons.arrow_forward_ios_rounded),
       onTap: () {
         setState(() {
@@ -114,36 +115,46 @@ class _AdminPageState extends State<AdminPage> {
         children: [
           ListTile(
             title: const Text('DHT 22 '),
-            subtitle: Text('Aktif : $actvDHT'),
-            trailing: Switch(
-              value: actvDHT,
-              onChanged: (value) {
-                if (value) {
-                  rtRef.update({'dht': value});
-                } else {
-                  rtRef.update({'dht': value});
-                }
-                setState(() {
-                  actvDHT = value;
-                });
-              },
+            subtitle: actvDHT
+                ? const Text('Sensor Menyala')
+                : const Text('Sensor Mati'),
+            trailing: Transform.scale(
+              scale: 0.7,
+              child: Switch(
+                value: actvDHT,
+                onChanged: (value) {
+                  if (value) {
+                    rtRef.update({'dht': value});
+                  } else {
+                    rtRef.update({'dht': value});
+                  }
+                  setState(() {
+                    actvDHT = value;
+                  });
+                },
+              ),
             ),
           ),
           ListTile(
             title: const Text('JSN - Ultra Sonic'),
-            subtitle: Text('Aktif : $actvJSN'),
-            trailing: Switch(
-                value: actvJSN,
-                onChanged: (value) {
-                  if (value) {
-                    rtRef.update({'jsn': value});
-                  } else {
-                    rtRef.update({'jsn': value});
-                  }
-                  setState(() {
-                    actvJSN = value;
-                  });
-                }),
+            subtitle: actvJSN
+                ? const Text('Sensor Menyala')
+                : const Text('Sensor Mati'),
+            trailing: Transform.scale(
+              scale: 0.7,
+              child: Switch(
+                  value: actvJSN,
+                  onChanged: (value) {
+                    if (value) {
+                      rtRef.update({'jsn': value});
+                    } else {
+                      rtRef.update({'jsn': value});
+                    }
+                    setState(() {
+                      actvJSN = value;
+                    });
+                  }),
+            ),
           ),
         ],
       ),

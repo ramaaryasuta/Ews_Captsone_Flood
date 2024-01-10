@@ -38,7 +38,7 @@ class ListDetail extends StatelessWidget {
                     const SizedBox(width: 15),
                     const Text('Ketinggian AIr'),
                     const Spacer(),
-                    Text('$waterLevel cm'),
+                    Text('${waterLevel.toStringAsFixed(2)} cm'),
                     const SizedBox(width: 5),
                   ],
                 ),
