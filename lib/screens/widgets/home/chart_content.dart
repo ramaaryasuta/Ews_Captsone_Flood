@@ -1,4 +1,3 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ews_capstone/models/monitor_model.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +30,16 @@ class _ChartSecState extends State<ChartSec> {
           return const Text('Error: Terjadi kesalahan');
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 10),
+                Text('Memuat Chart...'),
+              ],
+            ),
+          );
         }
 
         /// Getting data from firestore
@@ -42,18 +50,7 @@ class _ChartSecState extends State<ChartSec> {
           return MonitorModel.fromSnapshoot(doc);
         }).toList();
 
-        /// Testing notification
-        if (data[data.length - 1].waterLevel > 46) {
-          sendNotification(
-            'BERBAHAYA',
-            'Tinggi air sudah berbahaya, sekitar ${data[data.length - 1].waterLevel} cm',
-          );
-        } else if (data[data.length - 1].waterLevel > 24) {
-          sendNotification(
-            'WASPADA',
-            'Tinggi air melebihi batas normal, sekitar ${data[data.length - 1].waterLevel} cm',
-          );
-        }
+        int lastData = data.length - 1;
 
         return Column(
           children: [
@@ -61,8 +58,12 @@ class _ChartSecState extends State<ChartSec> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  Icon(Icons.ssid_chart_rounded),
-                  SizedBox(width: 10),
+                  SizedBox(width: 5),
+                  Icon(
+                    Icons.ssid_chart_rounded,
+                    size: 30,
+                  ),
+                  SizedBox(width: 20),
                   Text('Grafik pemantauan tinggi air'),
                 ],
               ),
@@ -76,7 +77,140 @@ class _ChartSecState extends State<ChartSec> {
                   top: 24,
                   bottom: 12,
                 ),
-                child: LineChart(mainData(data)),
+                child: LineChart(LineChartData(
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: true,
+                    horizontalInterval: 10,
+                    verticalInterval: 1,
+                    getDrawingHorizontalLine: (value) {
+                      return FlLine(
+                        color: Colors.grey.withOpacity(0.5),
+                        strokeWidth: 1,
+                      );
+                    },
+                    getDrawingVerticalLine: (value) {
+                      return FlLine(
+                        color: Colors.grey.withOpacity(0.5),
+                        strokeWidth: 1,
+                      );
+                    },
+                  ),
+                  titlesData: FlTitlesData(
+                    show: true,
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        interval: 1,
+                        getTitlesWidget: leftTitleWidgets,
+                        reservedSize: 42,
+                      ),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 30,
+                        getTitlesWidget: (value, meta) {
+                          const style = TextStyle(
+                            fontSize: 12,
+                          );
+                          Widget text;
+                          switch (value.toInt()) {
+                            case 1:
+                              text = Text(
+                                  extractTime(data[lastData - 17].timestamp),
+                                  style: style);
+                              break;
+                            case 5:
+                              text = Text(
+                                  extractTime(data[lastData - 13].timestamp),
+                                  style: style);
+                              break;
+                            case 9:
+                              text = Text(
+                                  extractTime(data[lastData - 9].timestamp),
+                                  style: style);
+                              break;
+                            case 13:
+                              text = Text(
+                                  extractTime(data[lastData - 5].timestamp),
+                                  style: style);
+                              break;
+                            case 17:
+                              text = Text(
+                                  extractTime(data[lastData - 1].timestamp),
+                                  style: style);
+                              break;
+                            default:
+                              text = const Text('', style: style);
+                              break;
+                          }
+
+                          return SideTitleWidget(
+                            axisSide: meta.axisSide,
+                            child: text,
+                          );
+                        },
+                        interval: 1,
+                      ),
+                    ),
+                  ),
+                  borderData: FlBorderData(
+                    show: true,
+                    border:
+                        Border.all(color: Colors.blueAccent.withOpacity(0.4)),
+                  ),
+                  minX: 0,
+                  maxX: 18,
+                  minY: 0,
+                  maxY: 120,
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: getChartDataPoint(data),
+                      isCurved: true,
+                      gradient: LinearGradient(
+                        colors: gradientColors,
+                      ),
+                      barWidth: 3,
+                      isStrokeCapRound: true,
+                      dotData: const FlDotData(
+                        show: false,
+                      ),
+                      belowBarData: BarAreaData(
+                        show: true,
+                        gradient: LinearGradient(
+                          colors: gradientColors
+                              .map((color) => color.withOpacity(0.3))
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+                  lineTouchData: LineTouchData(
+                    touchTooltipData: LineTouchTooltipData(
+                      tooltipMargin: 50,
+                      fitInsideHorizontally: true,
+                      getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                        return touchedBarSpots.map((barSpot) {
+                          TextStyle textStyle = const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          );
+                          return LineTooltipItem(
+                            "${barSpot.y.toInt()} cm\n ${data[(data.length - 19) + barSpot.x.toInt()].timestamp}",
+                            textStyle,
+                          );
+                        }).toList();
+                      },
+                    ),
+                  ),
+                )),
               ),
             )
           ],
@@ -104,102 +238,14 @@ class _ChartSecState extends State<ChartSec> {
       case 80:
         text = '80 cm';
         break;
+      case 100:
+        text = '100 cm';
+        break;
       default:
         return Container();
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
-  }
-
-  LineChartData mainData(List<MonitorModel> data) {
-    return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 10,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: Colors.grey.withOpacity(0.5),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: Colors.grey.withOpacity(0.5),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 1,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-          ),
-        ),
-        bottomTitles: const AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: false,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: Colors.blueAccent.withOpacity(0.4)),
-      ),
-      minX: 0,
-      maxX: 18,
-      minY: 0,
-      maxY: 100,
-      lineBarsData: [
-        LineChartBarData(
-          spots: getChartDataPoint(data),
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: gradientColors,
-          ),
-          barWidth: 3,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-            ),
-          ),
-        ),
-      ],
-      lineTouchData: LineTouchData(
-        touchTooltipData: LineTouchTooltipData(
-          getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-            return touchedBarSpots.map((barSpot) {
-              TextStyle textStyle = const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              );
-              return LineTooltipItem(
-                "${barSpot.y.toInt()} cm\n ${data[(data.length - 19) + barSpot.x.toInt()].timestamp}",
-                textStyle,
-              );
-            }).toList();
-          },
-        ),
-      ),
-    );
   }
 
   List<FlSpot> getChartDataPoint(List<MonitorModel> data) {
@@ -216,14 +262,13 @@ class _ChartSecState extends State<ChartSec> {
     return spots;
   }
 
-  sendNotification(String title, String body) {
-    AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: 10,
-        channelKey: 'basic_channel',
-        title: title,
-        body: body,
-      ),
-    );
+  String extractTime(String input) {
+    // Split the input string by space
+    List<String> parts = input.split(' ');
+
+    // Find the time part
+    String timePart = parts.last;
+
+    return timePart;
   }
 }

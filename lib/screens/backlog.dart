@@ -19,7 +19,16 @@ class BacklogPage extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10),
+                  Text('Memuat data...'),
+                ],
+              ),
+            );
           }
           final List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
           return ListView.separated(

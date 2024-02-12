@@ -1,9 +1,10 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ews_capstone/screens/loginpage.dart';
-import 'package:ews_capstone/splash.dart';
+import 'package:ews_capstone/checking_connectivity.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 // screens import for routes
+import 'firebase_options.dart';
 import 'screens/admin.dart';
 import 'screens/backlog.dart';
 import 'screens/homepage.dart';
@@ -11,16 +12,9 @@ import 'screens/mitigasi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  AwesomeNotifications().initialize(
-      null,
-      [
-        NotificationChannel(
-          channelKey: 'basic_channel',
-          channelName: 'EWS notifications',
-          channelDescription: 'Notifikasi EWS Banjir',
-        )
-      ],
-      debug: true);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -38,9 +32,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/splash',
+      initialRoute: '/check-connection',
       routes: {
-        '/splash': (context) => const SplashScreen(),
+        '/check-connection': (context) => const CheckConnectivity(),
         '/': (context) => const HomePage(),
         '/backlog': (context) => BacklogPage(),
         '/login': (context) => LoginPage(),
