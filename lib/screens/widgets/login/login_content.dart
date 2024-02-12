@@ -62,7 +62,10 @@ class LoginContent extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xff34334A),
               ),
-              child: const Text('Masuk'),
+              child: Text(
+                'Masuk',
+                style: TextStyle(color: Colors.blueAccent.shade200),
+              ),
             ),
           )
         ],
@@ -71,7 +74,7 @@ class LoginContent extends StatelessWidget {
   }
 
   void login(String username, String password, BuildContext context) {
-    const failedSnackBar = SnackBar(
+    const failedLoginSnackBar = SnackBar(
       backgroundColor: Colors.redAccent,
       content: Text(
         'Username atau password salah',
@@ -79,15 +82,23 @@ class LoginContent extends StatelessWidget {
       ),
     );
 
-    /// encrypt password using caesar cipher
+    const succesLoginSnackbar = SnackBar(
+      backgroundColor: Colors.green,
+      content: Text(
+        'Berhasil Masuk',
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+
     password = caesarCipher(password);
     if (listAdmin
         .where((element) =>
             element.username == username && element.password == password)
         .isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(succesLoginSnackbar);
       Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(failedSnackBar);
+      ScaffoldMessenger.of(context).showSnackBar(failedLoginSnackBar);
     }
   }
 

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({
+  MyDrawer({
     super.key,
   });
+
+  final Uri _url = Uri.parse("https://bit.ly/FeedbackEwsApp29");
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +31,27 @@ class MyDrawer extends StatelessWidget {
               },
             ),
             DrawerTile(
-              icon: LineIcons.fire,
-              title: 'Example firestore',
+              icon: LineIcons.clock,
+              title: 'Riwayat',
               onTap: () {
-                Navigator.pushNamed(context, '/detail');
+                Navigator.pushNamed(context, '/backlog');
               },
+            ),
+            DrawerTile(
+              icon: LineIcons.commentDots,
+              title: 'Berikan Umpan Balik',
+              onTap: () => _launchUrl(),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
   }
 }
 

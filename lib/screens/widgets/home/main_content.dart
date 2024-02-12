@@ -115,7 +115,8 @@ class _MainContentState extends State<MainContent> {
                       },
                     );
                   },
-                  child: const Text('Mitigasi'),
+                  child: Text('Mitigasi',
+                      style: TextStyle(color: Colors.blueAccent.shade100)),
                 )
               ],
             ),
@@ -146,10 +147,6 @@ class _MainContentState extends State<MainContent> {
         });
       },
     );
-
-    // if (rtWaterLevel > 24) {
-    //   NotificationFunc('Siaga', 'Ketinggian air sudah diatas 24 cm');
-    // }
 
     return Row(
       children: [

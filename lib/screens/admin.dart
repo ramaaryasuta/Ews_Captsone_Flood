@@ -17,9 +17,22 @@ class _AdminPageState extends State<AdminPage> {
   bool actvDHT = false;
   bool actvJSN = false;
 
-  bool isActive = false;
+  bool relayAlarm = false;
 
-  TextEditingController bannerTextCtrl = TextEditingController();
+  DatabaseReference rtRef =
+      FirebaseDatabase.instance.ref().child('monitor01/admin/');
+
+  @override
+  void initState() {
+    rtRef.onValue.listen((event) {
+      var data = jsonEncode(event.snapshot.value);
+      Map<String, dynamic> mapRt = jsonDecode(data);
+      relayAlarm = mapRt['relayAlarm'];
+      actvDHT = mapRt['dht'];
+      actvJSN = mapRt['jsn'];
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,39 +44,44 @@ class _AdminPageState extends State<AdminPage> {
             headerAdmin(context),
             notifTile(),
             const Divider(),
-            if (openNotifMenu) bannerTxtField() else const SizedBox(),
+            if (openNotifMenu) espSection() else const SizedBox(),
             sensorTile(),
             const Divider(),
             if (openSensorMenu) sensorMenu() else const SizedBox(),
+            ListTile(
+              leading: const Icon(Icons.timeline_sharp),
+              title: const Text('Cek Riwayat Pengukuran'),
+              subtitle: const Text('Lihat riwayat pengukuran'),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded),
+              onTap: () {
+                Navigator.pushNamed(context, '/backlog');
+              },
+            ),
+            const Divider(),
           ],
         ),
       ),
     ));
   }
 
-  Container bannerTxtField() {
-    final DatabaseReference rtRef =
-        FirebaseDatabase.instance.ref().child('monitor01/admin/isActive');
-    rtRef.onValue.listen((event) {
-      setState(() {
-        isActive = event.snapshot.value as bool;
-      });
-    });
+  Container espSection() {
     return Container(
       color: const Color(0xff29273C),
-      padding: const EdgeInsets.all(10),
       child: ListTile(
-        leading: const Icon(Icons.miscellaneous_services_rounded),
-        title: const Text('Mode Aktif'),
-        trailing: Switch(
-          value: isActive,
-          onChanged: (value) {
-            if (value) {
-              rtRef.set(true);
-            } else {
-              rtRef.set(false);
-            }
-          },
+        title: const Text('Relay Alarm'),
+        subtitle: relayAlarm
+            ? const Text('Relay aktif')
+            : const Text('Relay tidak aktif'),
+        trailing: Transform.scale(
+          scale: 0.7,
+          child: Switch(
+            value: relayAlarm,
+            onChanged: (value) {
+              setState(() {
+                rtRef.update({'relayAlarm': value});
+              });
+            },
+          ),
         ),
       ),
     );
@@ -71,9 +89,9 @@ class _AdminPageState extends State<AdminPage> {
 
   ListTile notifTile() {
     return ListTile(
-      leading: const Icon(Icons.notifications),
-      title: const Text('Banner Notifikasi'),
-      subtitle: const Text('update banner notifikasi'),
+      leading: const Icon(Icons.miscellaneous_services_rounded),
+      title: const Text('Akses ESP32'),
+      subtitle: const Text('Pengaturan esp32'),
       trailing: const Icon(Icons.arrow_forward_ios_rounded),
       onTap: () {
         setState(() {
@@ -98,52 +116,42 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   Container sensorMenu() {
-    DatabaseReference rtRef =
-        FirebaseDatabase.instance.ref().child('monitor01/admin/');
-    rtRef.onValue.listen((event) {
-      var data = jsonEncode(event.snapshot.value);
-      Map<String, dynamic> mapRt = jsonDecode(data);
-      setState(() {
-        actvDHT = mapRt['dht'];
-        actvJSN = mapRt['jsn'];
-      });
-    });
     return Container(
       color: const Color(0xff29273C),
       child: Column(
         children: [
           ListTile(
             title: const Text('DHT 22 '),
-            subtitle: Text('Aktif : $actvDHT'),
-            trailing: Switch(
-              value: actvDHT,
-              onChanged: (value) {
-                if (value) {
-                  rtRef.update({'dht': value});
-                } else {
-                  rtRef.update({'dht': value});
-                }
-                setState(() {
-                  actvDHT = value;
-                });
-              },
+            subtitle: actvDHT
+                ? const Text('Sensor Menyala')
+                : const Text('Sensor Mati'),
+            trailing: Transform.scale(
+              scale: 0.7,
+              child: Switch(
+                value: actvDHT,
+                onChanged: (value) {
+                  setState(() {
+                    rtRef.update({'dht': value});
+                  });
+                },
+              ),
             ),
           ),
           ListTile(
             title: const Text('JSN - Ultra Sonic'),
-            subtitle: Text('Aktif : $actvJSN'),
-            trailing: Switch(
-                value: actvJSN,
-                onChanged: (value) {
-                  if (value) {
-                    rtRef.update({'jsn': value});
-                  } else {
-                    rtRef.update({'jsn': value});
-                  }
-                  setState(() {
-                    actvJSN = value;
-                  });
-                }),
+            subtitle: actvJSN
+                ? const Text('Sensor Menyala')
+                : const Text('Sensor Mati'),
+            trailing: Transform.scale(
+              scale: 0.7,
+              child: Switch(
+                  value: actvJSN,
+                  onChanged: (value) {
+                    setState(() {
+                      rtRef.update({'jsn': value});
+                    });
+                  }),
+            ),
           ),
         ],
       ),
@@ -156,9 +164,13 @@ class _AdminPageState extends State<AdminPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            'Halaman Admin',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          const Column(
+            children: [
+              Text(
+                'Halaman Admin',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
           IconButton(
             onPressed: () {
@@ -166,8 +178,8 @@ class _AdminPageState extends State<AdminPage> {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: const Text('Logout'),
-                    content: const Text('Apakah anda yakin ingin keluar?'),
+                    title: const Text('Logout Admin'),
+                    content: const Text('Apakah anda yakin ingin keluar ?'),
                     actions: [
                       TextButton(
                         onPressed: () {

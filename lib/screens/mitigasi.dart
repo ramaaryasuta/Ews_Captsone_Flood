@@ -18,11 +18,15 @@ class MitigasiPage extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              AspectRatio(
+                aspectRatio: 2,
+                child: Image.asset('assets/images/flooded-house.png'),
+              ),
+              const SizedBox(height: 10),
               const Padding(
                 padding: EdgeInsets.all(10),
                 child: Text(
                   'Mitigasi bencana alam adalah serangkaian tindakan yang dirancang untuk mengurangi dampak buruk dari bencana alam yang mungkin terjadi. Tujuan utamanya adalah untuk melindungi manusia, harta benda, lingkungan, dan infrastruktur dari kerusakan yang bisa disebabkan oleh bencana alam seperti gempa bumi, banjir, badai, kebakaran hutan, tsunami, dan lain sebagainya. \n Mitigasi bencana alam sangat penting untuk mengurangi kerugian yang disebabkan oleh bencana dan untuk mempersiapkan masyarakat agar lebih tangguh menghadapi ancaman bencana di masa depan.',
-                  textAlign: TextAlign.justify,
                   style: TextStyle(height: 1.5),
                 ),
               ),
