@@ -21,10 +21,6 @@ class _HomePageState extends State<HomePage> {
 
     /// when app foreground
     FirebaseMessaging.onMessage.listen((message) {
-      // print('Message received when foreground');
-      // print('title: ${message.notification!.title}');
-      // print('body: ${message.notification!.body}');
-
       FirebaseMessaging.onMessage.listen((message) {
         RemoteNotification? notification = message.notification;
         AndroidNotification? android = message.notification?.android;
@@ -55,14 +51,7 @@ class _HomePageState extends State<HomePage> {
       });
     });
 
-    // When the user taps on a notification and the app is opened.
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // print('Message opened from system tray:');
-      // print('Title: ${message.notification?.title}');
-      // print('Body: ${message.notification?.body}');
-
-      // Add any additional logic for handling the opened notification.
-    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {});
   }
 
   @override
@@ -70,7 +59,7 @@ class _HomePageState extends State<HomePage> {
     firebaseMessaging.subscribeToTopic(topic);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff212031),
+        backgroundColor: const Color.fromARGB(255, 53, 51, 79),
         title: const Text('Semarang Utara'),
       ),
       drawer: MyDrawer(),

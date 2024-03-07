@@ -64,7 +64,7 @@ class _ChartSecState extends State<ChartSec> {
                     size: 30,
                   ),
                   SizedBox(width: 20),
-                  Text('Grafik pemantauan tinggi air'),
+                  Text('Grafik Pemantauan Tinggi Air'),
                 ],
               ),
             ),
@@ -195,6 +195,7 @@ class _ChartSecState extends State<ChartSec> {
                   lineTouchData: LineTouchData(
                     touchTooltipData: LineTouchTooltipData(
                       tooltipMargin: 50,
+                      tooltipBgColor: Colors.cyan.withOpacity(0.8),
                       fitInsideHorizontally: true,
                       getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
                         return touchedBarSpots.map((barSpot) {

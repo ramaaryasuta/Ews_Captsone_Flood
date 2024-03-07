@@ -42,28 +42,8 @@ class _MainContentState extends State<MainContent> {
               children: [
                 const Text('Status :'),
                 const SizedBox(width: 10),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: (rtWaterLevel > 47)
-                        ? Colors.red
-                        : (rtWaterLevel > 24)
-                            ? Colors.orange
-                            : Colors.green,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    (rtWaterLevel > 47)
-                        ? 'Berbahaya'
-                        : (rtWaterLevel > 24)
-                            ? 'Siaga'
-                            : 'Aman',
-                  ),
-                ),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: () {
+                GestureDetector(
+                  onTap: () {
                     showDialog(
                       context: context,
                       builder: (context) {
@@ -115,9 +95,26 @@ class _MainContentState extends State<MainContent> {
                       },
                     );
                   },
-                  child: Text('Mitigasi',
-                      style: TextStyle(color: Colors.blueAccent.shade100)),
-                )
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: (rtWaterLevel > 47)
+                          ? Colors.red
+                          : (rtWaterLevel > 24)
+                              ? Colors.orange
+                              : Colors.green,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      (rtWaterLevel > 47)
+                          ? 'Berbahaya - Mitigasi'
+                          : (rtWaterLevel > 24)
+                              ? 'Siaga - Mitigasi'
+                              : 'Aman - Mitigasi',
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -190,11 +187,11 @@ class _MainContentState extends State<MainContent> {
                 ),
                 const Text('Dari Permukaan Tanah'),
                 Text(
-                  'Kelembaban disekitar $rtHumidity%',
+                  'Kelembapan di sekitar $rtHumidity%',
                   style: const TextStyle(color: Colors.grey),
                 ),
                 Text(
-                  (rtHumidity > 60) ? 'Kemungkinan Hujan' : 'Kemungkinan Cerah',
+                  (rtHumidity > 70) ? 'Kemungkinan Hujan' : 'Kemungkinan Cerah',
                   style: const TextStyle(color: Colors.grey),
                 ),
               ],

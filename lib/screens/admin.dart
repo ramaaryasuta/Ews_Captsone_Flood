@@ -167,7 +167,7 @@ class _AdminPageState extends State<AdminPage> {
           const Column(
             children: [
               Text(
-                'Halaman Admin',
+                'Halaman Kontrol',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ],

@@ -78,7 +78,7 @@ class ListDetail extends StatelessWidget {
                       size: 40,
                     ),
                     const SizedBox(width: 15),
-                    const Text('Kelembaban'),
+                    const Text('Kelembapan'),
                     const Spacer(),
                     Text('$humidity%'),
                     const SizedBox(width: 5),
