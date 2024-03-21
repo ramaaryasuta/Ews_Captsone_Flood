@@ -15,21 +15,20 @@ class _HomePageState extends State<HomePage> {
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final String topic = "new_user_forums";
 
+  bool getNotif = false;
+
   @override
   void initState() {
     super.initState();
 
     /// when app foreground
     FirebaseMessaging.onMessage.listen((message) {
-      // print('Message received when foreground');
-      // print('title: ${message.notification!.title}');
-      // print('body: ${message.notification!.body}');
-
       FirebaseMessaging.onMessage.listen((message) {
         RemoteNotification? notification = message.notification;
         AndroidNotification? android = message.notification?.android;
 
-        if (notification != null && android != null) {
+        if (notification != null && android != null && getNotif == false) {
+          getNotif = true;
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -44,6 +43,7 @@ class _HomePageState extends State<HomePage> {
                   TextButton(
                     child: const Text('OK'),
                     onPressed: () {
+                      getNotif = false;
                       Navigator.of(context).pop();
                     },
                   ),
@@ -55,14 +55,7 @@ class _HomePageState extends State<HomePage> {
       });
     });
 
-    // When the user taps on a notification and the app is opened.
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // print('Message opened from system tray:');
-      // print('Title: ${message.notification?.title}');
-      // print('Body: ${message.notification?.body}');
-
-      // Add any additional logic for handling the opened notification.
-    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {});
   }
 
   @override
@@ -70,8 +63,28 @@ class _HomePageState extends State<HomePage> {
     firebaseMessaging.subscribeToTopic(topic);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff212031),
+        backgroundColor: const Color.fromARGB(255, 53, 51, 79),
         title: const Text('Semarang Utara'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.cyan.withOpacity(0.6),
+                      content: const Text(
+                        'Memuat ulang...',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  );
+                });
+              },
+              icon: const Icon(Icons.refresh_rounded))
+        ],
       ),
       drawer: MyDrawer(),
       body: const MainContent(),

@@ -38,7 +38,7 @@ class BacklogPage extends StatelessWidget {
                   documents[documents.length - 1 - index];
               // Gunakan data dari dokumen di sini
               return ListTile(
-                title: Text(data['timestamp'].toString(),
+                title: Text('${data['timestamp'].toString()} WIB',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +51,7 @@ class BacklogPage extends StatelessWidget {
                       'Suhu: ${data['temperature']} °C',
                     ),
                     Text(
-                      'Kelembaban: ${data['humidity']} %',
+                      'Kelembapan: ${data['humidity']} %',
                     ),
                   ],
                 ),

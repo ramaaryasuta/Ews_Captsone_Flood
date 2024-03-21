@@ -64,7 +64,7 @@ class _ChartSecState extends State<ChartSec> {
                     size: 30,
                   ),
                   SizedBox(width: 20),
-                  Text('Grafik pemantauan tinggi air'),
+                  Text('Grafik Pemantauan Tinggi Air'),
                 ],
               ),
             ),
@@ -195,6 +195,7 @@ class _ChartSecState extends State<ChartSec> {
                   lineTouchData: LineTouchData(
                     touchTooltipData: LineTouchTooltipData(
                       tooltipMargin: 50,
+                      tooltipBgColor: Colors.cyan.withOpacity(0.8),
                       fitInsideHorizontally: true,
                       getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
                         return touchedBarSpots.map((barSpot) {
@@ -256,6 +257,9 @@ class _ChartSecState extends State<ChartSec> {
 
       // get data waterLevel
       double y = data[data.length - 19 + i].waterLevel.toDouble();
+      if (y == -1) {
+        y = data[data.length - 19 + i - 1].waterLevel.toDouble();
+      }
       spots.add(FlSpot(x, y));
     }
 
@@ -265,10 +269,8 @@ class _ChartSecState extends State<ChartSec> {
   String extractTime(String input) {
     // Split the input string by space
     List<String> parts = input.split(' ');
-
     // Find the time part
     String timePart = parts.last;
-
     return timePart;
   }
 }

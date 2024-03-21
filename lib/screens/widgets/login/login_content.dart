@@ -2,7 +2,7 @@ import 'package:ews_capstone/models/admin_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class LoginContent extends StatelessWidget {
+class LoginContent extends StatefulWidget {
   const LoginContent({
     super.key,
     required this.userCtrl,
@@ -15,18 +15,26 @@ class LoginContent extends StatelessWidget {
   final List<AdminModel> listAdmin;
 
   @override
+  State<LoginContent> createState() => _LoginContentState();
+}
+
+class _LoginContentState extends State<LoginContent> {
+  bool isObsecure = true;
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
           SvgPicture.asset('assets/svg/login.svg'),
+          const Text('Halaman ini dikhususkan untuk admin.'),
           Padding(
             padding: const EdgeInsets.all(20),
             child: Form(
               child: Column(
                 children: [
                   TextFormField(
-                    controller: userCtrl,
+                    controller: widget.userCtrl,
                     decoration: const InputDecoration(
                       labelText: 'Username',
                       filled: true,
@@ -38,13 +46,23 @@ class LoginContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
-                    controller: passCtrl,
-                    obscureText: true,
-                    decoration: const InputDecoration(
+                    controller: widget.passCtrl,
+                    obscureText: isObsecure,
+                    decoration: InputDecoration(
                       labelText: 'Kata sandi',
                       filled: true,
-                      fillColor: Color(0xff34334A),
-                      border: OutlineInputBorder(
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isObsecure = !isObsecure;
+                          });
+                        },
+                        icon: isObsecure
+                            ? const Icon(Icons.visibility_off)
+                            : const Icon(Icons.visibility),
+                      ),
+                      fillColor: const Color(0xff34334A),
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide(),
                       ),
                     ),
@@ -58,7 +76,8 @@ class LoginContent extends StatelessWidget {
             height: 60,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
-              onPressed: () => login(userCtrl.text, passCtrl.text, context),
+              onPressed: () =>
+                  login(widget.userCtrl.text, widget.passCtrl.text, context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xff34334A),
               ),
@@ -76,22 +95,34 @@ class LoginContent extends StatelessWidget {
   void login(String username, String password, BuildContext context) {
     const failedLoginSnackBar = SnackBar(
       backgroundColor: Colors.redAccent,
-      content: Text(
-        'Username atau password salah',
-        style: TextStyle(color: Colors.white),
+      content: Row(
+        children: [
+          Icon(Icons.error_outline, color: Colors.white),
+          SizedBox(width: 10),
+          Text(
+            'Username atau password salah',
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
       ),
     );
 
     const succesLoginSnackbar = SnackBar(
       backgroundColor: Colors.green,
-      content: Text(
-        'Berhasil Masuk',
-        style: TextStyle(color: Colors.white),
+      content: Row(
+        children: [
+          Icon(Icons.check, color: Colors.white),
+          SizedBox(width: 10),
+          Text(
+            'Berhasil Masuk',
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
       ),
     );
 
     password = caesarCipher(password);
-    if (listAdmin
+    if (widget.listAdmin
         .where((element) =>
             element.username == username && element.password == password)
         .isNotEmpty) {

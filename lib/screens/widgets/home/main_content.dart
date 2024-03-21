@@ -1,10 +1,10 @@
-import 'dart:convert';
-
 import 'package:ews_capstone/screens/widgets/mitigasi/mitigasi_data.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
+import '../../../services/realtime_db.dart';
 import 'chart_content.dart';
 import 'listview_detail.dart';
 import '../mitigasi/list_mitigasi_builder.dart';
@@ -42,90 +42,91 @@ class _MainContentState extends State<MainContent> {
               children: [
                 const Text('Status :'),
                 const SizedBox(width: 10),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: (rtWaterLevel > 47)
-                        ? Colors.red
-                        : (rtWaterLevel > 24)
-                            ? Colors.orange
-                            : Colors.green,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    (rtWaterLevel > 47)
-                        ? 'Berbahaya'
-                        : (rtWaterLevel > 24)
-                            ? 'Siaga'
-                            : 'Aman',
-                  ),
-                ),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return Dialog(
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const SizedBox(),
-                                    Text(
-                                      (rtWaterLevel > 47)
-                                          ? 'Berbahaya'
-                                          : (rtWaterLevel > 24)
-                                              ? 'Siaga'
-                                              : 'Aman',
-                                      style: const TextStyle(fontSize: 20),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      icon: const Icon(Icons.close),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Expanded(
-                                  child: ListMitigasi(
-                                    langkah: (rtWaterLevel > 47)
-                                        ? langkahDarurat
-                                        : (rtWaterLevel > 24)
-                                            ? langkahSiaga
-                                            : langkahAman,
-                                    colors: (rtWaterLevel > 47)
-                                        ? Colors.red
-                                        : (rtWaterLevel > 24)
-                                            ? Colors.orange
-                                            : Colors.green,
+                Consumer<RealTimeDbService>(builder: (context, value, child) {
+                  return GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const SizedBox(),
+                                      Text(
+                                        (value.provRtWater > 47)
+                                            ? 'Berbahaya'
+                                            : (value.provRtWater > 24)
+                                                ? 'Siaga'
+                                                : 'Aman',
+                                        style: const TextStyle(fontSize: 20),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(Icons.close),
+                                      )
+                                    ],
                                   ),
-                                )
-                              ],
+                                  const SizedBox(height: 10),
+                                  Expanded(
+                                    child: ListMitigasi(
+                                      langkah: (value.provRtWater > 47)
+                                          ? langkahDarurat
+                                          : (value.provRtWater > 24)
+                                              ? langkahSiaga
+                                              : langkahAman,
+                                      colors: (value.provRtWater > 47)
+                                          ? Colors.red
+                                          : (value.provRtWater > 24)
+                                              ? Colors.orange
+                                              : Colors.green,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: Text('Mitigasi',
-                      style: TextStyle(color: Colors.blueAccent.shade100)),
-                )
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: (value.provRtWater > 47)
+                            ? Colors.red
+                            : (value.provRtWater > 24)
+                                ? Colors.orange
+                                : Colors.green,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        (value.provRtWater > 47)
+                            ? 'Berbahaya - Mitigasi'
+                            : (value.provRtWater > 24)
+                                ? 'Siaga - Mitigasi'
+                                : 'Aman - Mitigasi',
+                      ),
+                    ),
+                  );
+                }),
               ],
             ),
           ),
-          ListDetail(
-            suhu: rtTemperature,
-            humidity: rtHumidity,
-            waterLevel: rtWaterLevel,
-          ),
+          Consumer<RealTimeDbService>(builder: (context, value, child) {
+            return ListDetail(
+              suhu: value.provRtTemp,
+              humidity: value.provRtHum,
+              waterLevel: value.provRtWater,
+            );
+          }),
           const ChartSec()
         ],
       ),
@@ -133,21 +134,6 @@ class _MainContentState extends State<MainContent> {
   }
 
   Row heroSec() {
-    DatabaseReference refRealtime =
-        FirebaseDatabase.instance.ref().child('monitor01/monitors/');
-    // listen to firebase realtime database value
-    refRealtime.onValue.listen(
-      (event) {
-        var data = jsonEncode(event.snapshot.value);
-        Map<String, dynamic> mapRt = jsonDecode(data);
-        setState(() {
-          rtWaterLevel = mapRt['waterlevel'];
-          rtHumidity = mapRt['humidity'];
-          rtTemperature = mapRt['temperature'];
-        });
-      },
-    );
-
     return Row(
       children: [
         Expanded(
@@ -164,15 +150,19 @@ class _MainContentState extends State<MainContent> {
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: Row(
                     children: [
-                      Text(
-                        rtWaterLevel.toStringAsFixed(2),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 40,
-                          color: Colors.orangeAccent,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Consumer<RealTimeDbService>(
+                        builder: (context, value, child) {
+                          return Text(
+                            value.provRtWater.toStringAsFixed(2),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 40,
+                              color: Colors.orangeAccent,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        },
                       ),
                       const SizedBox(width: 5),
                       const Text(
@@ -189,13 +179,24 @@ class _MainContentState extends State<MainContent> {
                   ),
                 ),
                 const Text('Dari Permukaan Tanah'),
-                Text(
-                  'Kelembaban disekitar $rtHumidity%',
-                  style: const TextStyle(color: Colors.grey),
-                ),
-                Text(
-                  (rtHumidity > 60) ? 'Kemungkinan Hujan' : 'Kemungkinan Cerah',
-                  style: const TextStyle(color: Colors.grey),
+                Consumer<RealTimeDbService>(
+                  builder: (context, value, child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Kelembapan di sekitar ${value.provRtHum}%',
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                        Text(
+                          (value.provRtHum > 60)
+                              ? 'Kemungkinan Hujan'
+                              : 'Kemungkinan Cerah',
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
@@ -203,17 +204,21 @@ class _MainContentState extends State<MainContent> {
         ),
         Expanded(
           flex: 2,
-          child: Container(
-            padding: const EdgeInsets.only(right: 20),
-            child: (rtHumidity > 60)
-                ? SvgPicture.asset(
-                    'assets/svg/rainy.svg',
-                    width: 150,
-                  ) // soon rain svg
-                : SvgPicture.asset(
-                    'assets/svg/cloudy.svg',
-                    width: 150,
-                  ),
+          child: Consumer<RealTimeDbService>(
+            builder: (context, value, child) {
+              return Container(
+                padding: const EdgeInsets.only(right: 20),
+                child: (value.provRtHum > 60)
+                    ? SvgPicture.asset(
+                        'assets/svg/rainy.svg',
+                        width: 150,
+                      ) // soon rain svg
+                    : SvgPicture.asset(
+                        'assets/svg/cloudy.svg',
+                        width: 150,
+                      ),
+              );
+            },
           ),
         )
       ],

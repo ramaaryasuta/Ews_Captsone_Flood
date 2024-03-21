@@ -1,7 +1,9 @@
 import 'package:ews_capstone/screens/loginpage.dart';
 import 'package:ews_capstone/checking_connectivity.dart';
+import 'package:ews_capstone/services/realtime_db.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // screens import for routes
 import 'firebase_options.dart';
@@ -15,7 +17,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => RealTimeDbService(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

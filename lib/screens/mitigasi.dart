@@ -19,7 +19,7 @@ class MitigasiPage extends StatelessWidget {
           child: Column(
             children: [
               AspectRatio(
-                aspectRatio: 2,
+                aspectRatio: 2.5,
                 child: Image.asset('assets/images/flooded-house.png'),
               ),
               const SizedBox(height: 10),
@@ -41,7 +41,7 @@ class MitigasiPage extends StatelessWidget {
               ),
               Container(
                 width: double.infinity,
-                height: 400,
+                height: 500,
                 padding: const EdgeInsets.all(20),
                 child: TabBarView(
                   children: [
