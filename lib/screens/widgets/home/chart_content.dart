@@ -257,6 +257,9 @@ class _ChartSecState extends State<ChartSec> {
 
       // get data waterLevel
       double y = data[data.length - 19 + i].waterLevel.toDouble();
+      if (y == -1) {
+        y = data[data.length - 19 + i - 1].waterLevel.toDouble();
+      }
       spots.add(FlSpot(x, y));
     }
 
@@ -266,10 +269,8 @@ class _ChartSecState extends State<ChartSec> {
   String extractTime(String input) {
     // Split the input string by space
     List<String> parts = input.split(' ');
-
     // Find the time part
     String timePart = parts.last;
-
     return timePart;
   }
 }
